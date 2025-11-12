@@ -26,6 +26,35 @@ class RecipeBaseSchema(Schema):
         return in_data
 
 
+class RecipeListQuerySchema(Schema):
+    """Query params for listing recipes with search, tag and pagination."""
+    # PUBLIC_INTERFACE
+    search = fields.String(
+        allow_none=True,
+        required=False,
+        metadata={"description": "Search text to match title or description (case-insensitive)"},
+    )
+    # PUBLIC_INTERFACE
+    tag = fields.String(
+        allow_none=True,
+        required=False,
+        metadata={"description": "Filter results by exact tag text"},
+    )
+    # PUBLIC_INTERFACE
+    page = fields.Integer(
+        required=False,
+        missing=1,
+        validate=validate.Range(min=1),
+        metadata={"description": "Page number (default 1)"},
+    )
+    # PUBLIC_INTERFACE
+    page_size = fields.Integer(
+        required=False,
+        missing=10,
+        validate=validate.Range(min=1, max=100),
+        metadata={"description": "Items per page (default 10, max 100)"},
+    )
+
 class RecipeCreateSchema(RecipeBaseSchema):
     pass
 

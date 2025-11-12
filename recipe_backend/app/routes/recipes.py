@@ -50,7 +50,7 @@ def apply_collections(recipe: Recipe, data: Dict):
 
 @blp.route("/")
 class RecipesList(MethodView):
-    @blp.arguments(schema=None, location="query")
+    @blp.arguments(schema="RecipeListQuerySchema", location="query")
     @blp.response(200, PaginatedRecipesSchema)
     def get(self, args=None):
         """
@@ -63,10 +63,19 @@ class RecipesList(MethodView):
         - page_size: Items per page (default 10).
         """
         q = Recipe.query
-        search = request.args.get("search", type=str)
-        tag = request.args.get("tag", type=str)
-        page = request.args.get("page", default=1, type=int)
-        page_size = request.args.get("page_size", default=10, type=int)
+        # Prefer parsed args if provided by schema, otherwise fall back to request.args for safety
+        search = (args or {}).get("search") if isinstance(args, dict) else None
+        if search is None:
+            search = request.args.get("search", type=str)
+        tag = (args or {}).get("tag") if isinstance(args, dict) else None
+        if tag is None:
+            tag = request.args.get("tag", type=str)
+        page = (args or {}).get("page") if isinstance(args, dict) else None
+        if page is None:
+            page = request.args.get("page", default=1, type=int)
+        page_size = (args or {}).get("page_size") if isinstance(args, dict) else None
+        if page_size is None:
+            page_size = request.args.get("page_size", default=10, type=int)
 
         if search:
             like = f"%{search.lower()}%"
