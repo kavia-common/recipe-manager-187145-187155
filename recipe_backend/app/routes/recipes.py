@@ -11,6 +11,7 @@ from ..schemas import (
     RecipeUpdateSchema,
     RecipePatchSchema,
     PaginatedRecipesSchema,
+    RecipeListQuerySchema,
 )
 
 
@@ -50,7 +51,7 @@ def apply_collections(recipe: Recipe, data: Dict):
 
 @blp.route("/")
 class RecipesList(MethodView):
-    @blp.arguments(schema="RecipeListQuerySchema", location="query")
+    @blp.arguments(schema=RecipeListQuerySchema, location="query")
     @blp.response(200, PaginatedRecipesSchema)
     def get(self, args=None):
         """
