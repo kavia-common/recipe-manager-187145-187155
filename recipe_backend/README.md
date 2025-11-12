@@ -17,7 +17,9 @@ pip install -r requirements.txt
 python run.py
 ```
 
-The server starts on http://localhost:3001 and exposes Swagger UI at: http://localhost:3001/docs
+The server starts on http://localhost:3001 and exposes:
+- Swagger UI: http://localhost:3001/docs
+- OpenAPI JSON: http://localhost:3001/openapi.json
 
 It will create a SQLite DB file `recipes.db` in the working directory and seed a couple of sample recipes if empty.
 
